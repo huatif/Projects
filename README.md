@@ -1,6 +1,6 @@
 
 
-# **Building IWMS Accounts (Dev, Uat and Prod)**
+
 
 
 ## **Table of Contents**
