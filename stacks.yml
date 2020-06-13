@@ -1,5 +1,5 @@
 namespace: ${app_name}-${component_name}-${env_name}
-stacker_bucket: cix-ops-${aws_account}-stacker
+stacker_bucket: amehan-net-stacker
 stacker_bucket_region: ca-central-1
  
 sys_path: ./
