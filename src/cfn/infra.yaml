@@ -36,7 +36,7 @@ Resources:
             - s3:GetObject
             Effect: Allow
             Resource:
-             - !Sub arn:aws:s3:::amahan-ent/*
+             - !Sub arn:aws:s3:::amehan-ent/*
           Version: '2012-10-17'
         PolicyName: EC2-S3-Download
       - PolicyDocument:
