@@ -131,7 +131,7 @@ Resources:
           config:
             - download-files
             - configure-instance 
-            - install-application
+           # - install-application
             - signal-instance-completion
         download-files:
           files:
