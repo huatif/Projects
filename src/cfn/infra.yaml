@@ -60,7 +60,7 @@ Outputs:
     Description: Instance Role name
     Value: !Ref EC2InstanceRole
     Export: 
-      Name: !Sub "${AWS::StackName}-EC2InstanceRole"
+      Name: !Sub "${AWS::StackName}-EC2IAMRole"
       
   StackName:
     Description: StackName of this stack
