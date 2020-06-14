@@ -10,7 +10,9 @@ sys_path: ./
 stacks:
   infra:
     stack_name: ec2-infra
-    template_path: templates/infra.yaml 
+    template_path: templates/infra.yaml
+    variables:
+      IAMRoleName: ${iam_role_name}    
   ec2-stack:
     stack_name: win-ec2-v2019
     template_path: templates/EC2.yaml
@@ -19,7 +21,7 @@ stacks:
       Hostname: ${hostname}v${app_version}
       InstanceAMI: ${instance_ami}
       InstanceKeyPair: ${ec2_keypair}
-      IAMRoleName: ${iam_role_name}
+     # IAMRoleName: ${iam_role_name}
       InstanceType: ${instance_type}
       IAMS3BucketName: ${ops_bucket_name}
       RootVolumeSize: ${RootVolumeSize}
