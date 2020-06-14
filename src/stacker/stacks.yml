@@ -1,37 +1,27 @@
 namespace: ${app_name}-${env_name}
 stacker_bucket: amehan-ent-stacker
 stacker_bucket_region: ca-central-1
- 
+
+env_name: ${aws_account}
+
 sys_path: ./
  
-     env_name: ${aws_account}
-     AppEnv: ${app_name}
+ 
 stacks:
   infra:
     stack_name: ec2-infra
     template_path: templates/infra.yaml
-    variables:
-      IAMS3BucketName: ${ops_bucket_name}
-
-
- 
-  adfs-stack:
-    stack_name: adfs
+    
+  ec2-stack:
+    stack_name: win-ec2-v2019
     template_path: templates/EC2.yaml
     variables:
+      InfraStackName: ${output infra::StackName}
       Hostname: ${hostname}v${app_version}
-      IAMS3BucketName: ${ops_bucket_name}
-      LatestAmiId: ${instance_ami}
+      InstanceAMI: ${instance_ami}
       InstanceKeyPair: ${ec2_keypair}
       IAMRoleName: ${iam_role_name}
       InstanceType: ${instance_type}
-      DomainDNSName: ${domain_dnsname}
-      DomainNetBIOSName: ${NetBIOS_name}
-      DomainAdminPassword: ${domain_secret}
-      DomainAdminUser: ${admin_username}
-      S3KeyPrefix: ${s3_key}
-      InfraStackName: ${output infra::StackName}
-      
-      
-      
-      
+      IAMS3BucketName: ${ops_bucket_name}
+      RootVolumeSize: ${RootVolumeSize}
+      AppEnv: ${app_name}
