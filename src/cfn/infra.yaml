@@ -7,7 +7,36 @@ Parameters:
   IAMRoleName:
     Type: String
     Description: Role Name
-    
+Mappings: 
+  RegionMap: 
+    "us-east-1":
+      NAME: Dev
+      VPC: vpc-0b3165654d20eb6f3
+      PRIVATESUBNET1: subnet-086396cc6e283e6cd
+      PRIVATESUBNET2: subnet-07012176d3b948507
+      PUBLICSUBNET1: subnet-0a81c8bbd3cb6a18a
+      PUBLICSUBNET2: subnet-0f69c9649ed612b67
+      AMAZONLINUXAMI: ami-0a887e401f7654935
+      SSHSG: sg-0cd03438407b484f0
+      RDPSG: sg-04b2dcf92d411181a
+      HTTPSG: sg-0c968468c154d1b42
+      BUCKETNAME: amehanamehan
+
+    "ca-central-1":
+      NAME: Dev
+      VPC: vpc-01ed2833ff261ac6f
+      DefaultVPC: vpc-c3274eab
+      DefaultSubnet: subnet-6ab22d02
+      PRIVATESUBNET1: subnet-0ae6f4d92310fb2f3
+      PRIVATESUBNET2: subnet-0bdd4d9d1c682c766
+      PUBLICSUBNET1: subnet-0ce18660c7f3ce39c
+      PUBLICSUBNET2: subnet-0c11ee92821ca1e3d
+      AMAZONLINUXAMI: ami-00db12b46ef5ebc36
+      SSHSG: sg-
+      RDPSG: sg-
+      HTTPSG: sg-
+      BUCKETNAME: amehan-ent
+
 Resources:
   EC2InstanceProfile:
     Properties:
