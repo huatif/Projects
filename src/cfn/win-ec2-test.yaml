@@ -89,34 +89,6 @@ Mappings:
 
 
 Resources:
-  ADFSSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties: 
-      GroupDescription: !Join
-        - ''
-        - - 'EC2-'
-          - !Ref AWS::StackName
-          - ' App sg'
-      Tags:
-      - Key: Name
-        Value: !Join
-          - ''
-          - - 'ADFS-'
-            - !Ref AWS::StackName
-      - Key: Project
-        Value: Training
-      - Key: Application
-        Value: ADFS
-      VpcId:
-        !FindInMap [RegionMap, !Ref "AWS::Region", DefaultVPC]
-      SecurityGroupIngress:
-      - IpProtocol: tcp
-        FromPort: '3389'
-        ToPort: '3389'
-        CidrIp: 0.0.0.0/0
-        Description: Internall Network Access
-
-
   ADFSInstance:
     Type: AWS::EC2::Instance
     Metadata:
@@ -271,11 +243,12 @@ Resources:
       BlockDeviceMappings:
       - DeviceName: /dev/sda1
         Ebs:
-          VolumeSize: 50
+          VolumeSize: 40
           VolumeType: gp2
       ImageId: !Ref 'LatestAmiId'
       SecurityGroupIds:
-      - !Ref ADFSSecurityGroup
+      - Fn::ImportValue:
+         !Sub "${InfraStackName}-ADFSSecurityGroup"
       IamInstanceProfile:
          Fn::ImportValue:
           !Sub "${InfraStackName}-EC2InstanceProfile"

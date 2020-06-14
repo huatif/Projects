@@ -16,35 +16,31 @@ stacks:
 
   app-layer-green:
     enabled: ${app_green_enabled}
-    stack_name: app-v{app_green_ver}
+    stack_name: app-v${app_green_ver}
     template_path: templates/win-ec2-test.yaml
     variables:
       InfraStackName: ${output infra::StackName}
       Hostname: ${hostname}v${app_green_ver}
       InstanceAMI: ${instance_ami_green}
       InstanceKeyPair: ${ec2_keypair}
-     # IAMRoleName: ${iam_role_name}
       InstanceType: ${instance_type}
       IAMS3BucketName: ${ops_bucket_name}
-     # RootVolumeSize: ${RootVolumeSize}
       AppEnv: ${aws_account}
       ADFSVersion: ${adfs_version_green}
 
   app-layer-blue:
     enabled: ${app_blue_enabled}
-    stack_name: app-v{app_blue_ver}
+    stack_name: app-v${app_blue_ver}
     template_path: templates/win-ec2-test.yaml
     variables:
       InfraStackName: ${output infra::StackName}
       Hostname: ${hostname}v${app_blue_ver}
       InstanceAMI: ${instance_ami_blue}
       InstanceKeyPair: ${ec2_keypair}
-     # IAMRoleName: ${iam_role_name}
       InstanceType: ${instance_type}
       IAMS3BucketName: ${ops_bucket_name}
-     # RootVolumeSize: ${RootVolumeSize}
       AppEnv: ${aws_account}
-      ADFSVersion: ${adfs_version_green}
+      ADFSVersion: ${adfs_version_blue}
 
 
 

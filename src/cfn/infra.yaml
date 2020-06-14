@@ -48,6 +48,34 @@ Resources:
           Version: '2012-10-17'
         PolicyName: SecretsManagerGet
     Type: AWS::IAM::Role
+    
+  ADFSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: !Join
+        - ''
+        - - 'EC2-'
+          - !Ref AWS::StackName
+          - ' App sg'
+      Tags:
+      - Key: Name
+        Value: !Join
+          - ''
+          - - 'ADFS-'
+            - !Ref AWS::StackName
+      - Key: Project
+        Value: Training
+      - Key: Application
+        Value: ADFS
+      VpcId:
+        !FindInMap [RegionMap, !Ref "AWS::Region", DefaultVPC]
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '3389'
+        ToPort: '3389'
+        CidrIp: 0.0.0.0/0
+        Description: Internall Network Access
+
 Outputs:
   
   EC2InstanceProfile:
@@ -61,6 +89,12 @@ Outputs:
     Value: !Ref EC2InstanceRole
     Export: 
       Name: !Sub "${AWS::StackName}-EC2IAMRole"
+
+  ADFSSecurityGroup:
+    Description: Instance Role name
+    Value: !Ref ADFSSecurityGroup
+    Export: 
+      Name: !Sub "${AWS::StackName}-ADFSSecurityGroup"
       
   StackName:
     Description: StackName of this stack
