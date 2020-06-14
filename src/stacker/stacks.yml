@@ -12,17 +12,53 @@ stacks:
     stack_name: ec2-infra
     template_path: templates/infra.yaml
     variables:
-      IAMRoleName: ${iam_role_name}    
-  ec2-stack:
-    stack_name: win-ec2-v2019
+      IAMRoleName: ${iam_role_name}
+
+  app-layer-green:
+    enabled: ${app_green_enabled}
+    stack_name: app-v{app_green_ver}
     template_path: templates/win-ec2-test.yaml
     variables:
       InfraStackName: ${output infra::StackName}
-      Hostname: ${hostname}v${app_version}
-      InstanceAMI: ${instance_ami}
+      Hostname: ${hostname}v${app_green_ver}
+      InstanceAMI: ${instance_ami_green}
       InstanceKeyPair: ${ec2_keypair}
      # IAMRoleName: ${iam_role_name}
       InstanceType: ${instance_type}
       IAMS3BucketName: ${ops_bucket_name}
      # RootVolumeSize: ${RootVolumeSize}
-      AppEnv: ${app_name}
+      AppEnv: ${aws_account}
+      ADFSVersion: ${adfs_version_green}
+
+  app-layer-blue:
+    enabled: ${app_blue_enabled}
+    stack_name: app-v{app_blue_ver}
+    template_path: templates/win-ec2-test.yaml
+    variables:
+      InfraStackName: ${output infra::StackName}
+      Hostname: ${hostname}v${app_blue_ver}
+      InstanceAMI: ${instance_ami_blue}
+      InstanceKeyPair: ${ec2_keypair}
+     # IAMRoleName: ${iam_role_name}
+      InstanceType: ${instance_type}
+      IAMS3BucketName: ${ops_bucket_name}
+     # RootVolumeSize: ${RootVolumeSize}
+      AppEnv: ${aws_account}
+      ADFSVersion: ${adfs_version_green}
+
+
+
+      
+  # ec2-stack:
+    # stack_name: win-ec2-v2019
+    # template_path: templates/win-ec2-test.yaml
+    # variables:
+      # InfraStackName: ${output infra::StackName}
+      # Hostname: ${hostname}v${app_version}
+      # InstanceAMI: ${instance_ami}
+      # InstanceKeyPair: ${ec2_keypair}
+     IAMRoleName: ${iam_role_name}
+      # InstanceType: ${instance_type}
+      # IAMS3BucketName: ${ops_bucket_name}
+     RootVolumeSize: ${RootVolumeSize}
+      # AppEnv: ${app_name}

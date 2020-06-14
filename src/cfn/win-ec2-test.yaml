@@ -11,6 +11,9 @@ Parameters:
     Description: The S3 Bucket where the installer files will be downloaded from
     Type: String
     Default: amehan-ent
+  ADFSVersion:
+    Description: App version
+    Type: String
   LatestAmiId:
     Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
     Default: /aws/service/ami-windows-latest/Windows_Server-2016-English-Full-Base
