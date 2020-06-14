@@ -120,12 +120,13 @@ Resources:
       AWS::CloudFormation::Authentication:
         S3AccessCreds:
           type: S3
+          buckets:
+            - Fn::ImportValue:
+                !Sub "${InfraStackName}-EC2InstanceProfile"          
           roleName: 
             Fn::ImportValue:
               !Sub "${InfraStackName}-EC2IAMRole"
-          buckets:
-            - Fn::ImportValue:
-                !Sub "${InfraStackName}-EC2InstanceProfile"
+
       'AWS::CloudFormation::Init':
         configSets:
           config:
