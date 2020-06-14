@@ -25,4 +25,4 @@ stacks:
       InstanceType: ${instance_type}
       IAMS3BucketName: ${ops_bucket_name}
       RootVolumeSize: ${RootVolumeSize}
-      AppEnv: ${app_name
+      AppEnv: ${app_name}
