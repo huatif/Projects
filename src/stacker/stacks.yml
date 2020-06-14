@@ -11,7 +11,7 @@ stacks:
     template_path: templates/infra.yaml
     variables:
       IAMS3BucketName: ${ops_bucket_name}
-      AppEnv: ${aws_account}
+      env_name: ${aws_account}
  
   ec2-stack:
     stack_name: win-ec2-v2019
