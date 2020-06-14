@@ -49,7 +49,19 @@ Resources:
         PolicyName: SecretsManagerGet
     Type: AWS::IAM::Role
 Outputs:
+  
+  EC2InstanceProfile:
+    Description: Instance Profile name
+    Value: !Ref EC2InstanceProfile
+    Export: 
+      Name: !Sub "${AWS::StackName}-EC2InstanceProfile"
 
+  EC2InstanceRole:
+    Description: Instance Role name
+    Value: !Ref EC2InstanceRole
+    Export: 
+      Name: !Sub "${AWS::StackName}-EC2InstanceRole"
+      
   StackName:
     Description: StackName of this stack
     Value: !Ref AWS::StackName
