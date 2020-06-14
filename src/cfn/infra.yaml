@@ -16,8 +16,8 @@ Resources:
     Type: AWS::IAM::InstanceProfile
   EC2InstanceRole:
     Properties:
-      AssumeRolePolicyDocument:
       RoleName: !Ref IAMRoleName
+      AssumeRolePolicyDocument:
         Statement:
         - Action: sts:AssumeRole
           Effect: Allow
