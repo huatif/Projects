@@ -120,7 +120,7 @@ Resources:
       AWS::CloudFormation::Authentication:
         S3AccessCreds:
           type: S3
-          roleName: !Ref 'ADFSRole'
+          roleName: 
             Fn::ImportValue:
               !Sub "${InfraStackName}-EC2IAMRole"
           buckets:
