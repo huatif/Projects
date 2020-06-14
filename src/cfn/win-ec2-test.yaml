@@ -1,0 +1,333 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  This template deploys one ESC2 instance and install ADFS
+
+Parameters:
+  Hostname:
+    Description: Host name of the instance 
+    Type: String
+    Default: adfs01
+  IAMS3BucketName:
+    Description: The S3 Bucket where the installer files will be downloaded from
+    Type: String
+    Default: amehan-ent
+  LatestAmiId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-windows-latest/Windows_Server-2016-English-Full-Base
+  InstanceKeyPair:
+    Description: They Key Pair to use with the instance
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: amehan-central-key 
+  InstanceType:
+    AllowedValues:
+      - t2.micro
+      - t3.medium
+    Default: t2.micro
+    Description: Amazon EC2 instance type for the WAP and ADFS Servers
+    Type: String
+  DomainDNSName:
+    Default: amehan.net
+    Description: Fully qualified domain name (FQDN) of the forest root domain
+    Type: String
+  DomainNetBIOSName:
+    Default: amehan
+    Description: NetBIOS name of the domain (upto 15 characters)
+    Type: String
+  DomainAdminPassword:
+    Description: Password for the domain admin user
+    NoEcho: 'true'
+    Type: String
+    Default: Balochistan2020!
+  DomainAdminUser:
+    Default: Administrator
+    Description: User name for the account that will be added as Domain Administrator.
+    Type: String
+  S3KeyPrefix:
+    Type: String
+    Default: ADFS/Scripts/
+    Description: S3 key prefix for the Quick Start assets. Quick Start key prefix
+      can include numbers, lowercase letters, uppercase letters, hyphens (-), and
+      forward slash (/).
+
+  InfraStackName:
+    Default: infra
+    Description: Infra Stack
+    Type: String
+
+Mappings: 
+  RegionMap: 
+    "us-east-1":
+      NAME: Dev
+      VPC: vpc-0b3165654d20eb6f3
+      PRIVATESUBNET1: subnet-086396cc6e283e6cd
+      PRIVATESUBNET2: subnet-07012176d3b948507
+      PUBLICSUBNET1: subnet-0a81c8bbd3cb6a18a
+      PUBLICSUBNET2: subnet-0f69c9649ed612b67
+      AMAZONLINUXAMI: ami-0a887e401f7654935
+      SSHSG: sg-0cd03438407b484f0
+      RDPSG: sg-04b2dcf92d411181a
+      HTTPSG: sg-0c968468c154d1b42
+      BUCKETNAME: amehanamehan
+
+    "ca-central-1":
+      NAME: Dev
+      VPC: vpc-01ed2833ff261ac6f
+      DefaultVPC: vpc-c3274eab
+      DefaultSubnet: subnet-6ab22d02
+      PRIVATESUBNET1: subnet-0ae6f4d92310fb2f3
+      PRIVATESUBNET2: subnet-0bdd4d9d1c682c766
+      PUBLICSUBNET1: subnet-0ce18660c7f3ce39c
+      PUBLICSUBNET2: subnet-0c11ee92821ca1e3d
+      AMAZONLINUXAMI: ami-00db12b46ef5ebc36
+      SSHSG: sg-
+      RDPSG: sg-
+      HTTPSG: sg-
+      BUCKETNAME: amehan-ent
+
+
+Resources:
+  ADFSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: !Join
+        - ''
+        - - 'EC2-'
+          - !Ref AWS::StackName
+          - ' App sg'
+      Tags:
+      - Key: Name
+        Value: !Join
+          - ''
+          - - 'ADFS-'
+            - !Ref AWS::StackName
+      - Key: Project
+        Value: Training
+      - Key: Application
+        Value: ADFS
+      VpcId:
+        !FindInMap [RegionMap, !Ref "AWS::Region", DefaultVPC]
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '3389'
+        ToPort: '3389'
+        CidrIp: 0.0.0.0/0
+        Description: Internall Network Access
+
+
+  ADFSInstance:
+    Type: AWS::EC2::Instance
+    Metadata:
+      AWS::CloudFormation::Authentication:
+        S3AccessCreds:
+          type: S3
+          roleName: !Ref 'ADFSRole'
+            Fn::ImportValue:
+              !Sub "${InfraStackName}-EC2IAMRole"
+          buckets:
+            - Fn::ImportValue:
+                !Sub "${InfraStackName}-EC2InstanceProfile"
+      'AWS::CloudFormation::Init':
+        configSets:
+          config:
+            - download-files
+            - configure-instance 
+            - install-application
+            - signal-instance-completion
+        download-files:
+          files:
+            'c:\tools\scripts\Domain-Join.ps1':
+              source:
+                Fn::Sub:
+                  - "https://${IAMS3BucketName}.s3-${AWS::Region}.amazonaws.com/software/shared/windows/Domain-Join.ps1"
+                #  - "https://${IAMS3BucketName}.s3-ca-central-1.amazonaws.com/software/shared/windows/Domain-Join.ps1"
+                  - { IAMS3BucketName: !FindInMap [RegionMap, !Ref "AWS::Region", BUCKETNAME] }
+              authentication: S3AccessCreds
+
+            'c:\tools\scripts\Install-ADFS.ps1':
+              source:
+                Fn::Sub:
+                  - "https://${IAMS3BucketName}.s3-${AWS::Region}.amazonaws.com/software/${S3KeyPrefix}Install-ADFS.ps1"
+                  - { IAMS3BucketName: !FindInMap [RegionMap, !Ref "AWS::Region", BUCKETNAME] }
+              authentication: S3AccessCreds
+
+            'c:\tools\scripts\Create-Share.ps1':
+              source:
+                Fn::Sub:
+                  - "https://${IAMS3BucketName}.s3-${AWS::Region}.amazonaws.com/software/${S3KeyPrefix}Create-Share.ps1"
+                  - { IAMS3BucketName: !FindInMap [RegionMap, !Ref "AWS::Region", BUCKETNAME] }
+              authentication: S3AccessCreds
+
+            # 'c:\tools\scripts\set-dns.ps1':
+            #   source:
+            #     Fn::Sub:
+            #       - "https://${IAMS3BucketName}.s3-${AWS::Region}.amazonaws.com/software/shared/windows/set-dns.ps1"
+            #       - { IAMS3BucketName: !FindInMap [RegionMap, !Ref "AWS::Region", BUCKETNAME] }
+            #   authentication: S3AccessCreds
+
+        configure-instance:
+          commands:
+            1-set-powershell-execution-policy:
+              command: >-
+                powershell.exe -Command "Set-ExecutionPolicy UnRestricted -Force"
+              waitAfterCompletion: '0'
+            2-Disable-firewall:
+              command: >-
+                powershell.exe -command "Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False"
+              waitAfterCompletion: '0'
+            3-Disable-NetBios:
+              command: >-
+                powershell.exe -command "Invoke-CimMethod -Query 'SELECT * FROM Win32_NetworkAdapterConfiguration WHERE IPEnabled=1' -MethodName SetTcpipNetbios -Arguments @{TcpipNetbiosOptions=[uint32]2}"
+              waitAfterCompletion: '0'
+
+            # 2-add-dns-suffixSearchList:
+            #   command: >-
+            #     powershell.exe -command Set-DnsClientGlobalSetting -SuffixSearchList @("amehan.net", "amehan.ca")
+            #   waitAfterCompletion: '0'
+ 
+            # 4-rename-computer:
+            #   command: !Join
+            #     - ''
+            #     - - >-
+            #       -  powershell.exe -Command "Rename-Computer -Restart -Force -NewName "
+            #       -  !Ref Hostname
+            #   waitAfterCompletion: forever 
+            4-rename-computer:
+              command: !Join
+                - ''
+                - - >-
+                  -  powershell.exe -Command "Rename-Computer -NewName "
+                  -  !Ref Hostname
+                  -  " -Force -Restart"
+              waitAfterCompletion: 'forever'
+
+            # 5-reboot:
+            #   command: >-
+            #     powershell.exe -Command "Restart-Computer -Force"
+            #   waitAfterCompletion: 'forever'
+ 
+            # 5-join-domain:
+              # command: >-
+                # powershell.exe -Command "c:\tools\scripts\Domain-Join.ps1"
+              # waitAfterCompletion: 'forever'
+
+        # install-application:
+          # commands:
+            # 1-create-cert-share:
+              # command: !Join
+                # - ''
+                # - - powershell.exe -Command "C:\tools\scripts\Create-Share.ps1
+                  # - ' -Path ''c:\cert'''
+                  # - ' -ShareName ''cert'''
+                  # - ' -FolderPath ''c:\'''
+                  # - ' -FolderName ''cert'''
+                  # - ' -DomainNetBIOSName '''
+                  # - !Ref 'DomainNetBIOSName'
+                  # - ''' -DomainAdminUser '''
+                  # - !Ref 'DomainAdminUser'
+                  # - ''' -DomainAdminPassword '''
+                  # - !Ref 'DomainAdminPassword'
+                  # - ''' -FullAccessUser '''
+                  # - !Ref 'DomainNetBIOSName'
+                  # - \
+                  # - !Ref 'DomainAdminUser'
+                  # - '''"'
+              # waitAfterCompletion: '0'
+
+            # 2-install-adfs:
+              # command: !Join
+                # - ''
+                # - - powershell.exe -Command "C:\tools\scripts\Install-ADFS.ps1 -DomainDNSName '
+                  # - !Ref 'DomainDNSName'
+                  # - ''' -DomainNetBIOSName '''
+                  # - !Ref 'DomainNetBIOSName'
+                  # - ''' -UserName '''
+                  # - !Ref 'DomainAdminUser'
+                  # - ''' -Password '''
+                  # - !Ref 'DomainAdminPassword'
+                  # - ''' -FirstServer"'
+              # waitAfterCompletion: '0'
+
+        signal-instance-completion:
+          commands:              
+            1-SignalCFN:
+              command: !Join
+                - ''
+                - - >-
+                  - powershell.exe -Command "cfn-signal.exe  "
+                  - " --exit-code 0"
+                  - " --region "
+                  - !Ref "AWS::Region"
+                  - " --resource ADFSInstance" 
+                  - " --stack "
+                  - !Ref "AWS::StackName"
+              waitAfterCompletion: '0'
+
+    Properties:
+      EbsOptimized: 'false'
+      BlockDeviceMappings:
+      - DeviceName: /dev/sda1
+        Ebs:
+          VolumeSize: 50
+          VolumeType: gp2
+      ImageId: !Ref 'LatestAmiId'
+      SecurityGroupIds:
+      - !Ref ADFSSecurityGroup
+      IamInstanceProfile:
+         Fn::ImportValue:
+          !Sub "${InfraStackName}-EC2InstanceProfile"
+          
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref InstanceKeyPair
+      SubnetId:
+        !FindInMap [RegionMap, !Ref "AWS::Region", DefaultSubnet]
+      Tags:
+        - Key: Name
+          Value: ADFS1
+        
+      # NetworkInterfaces:
+      #   - DeleteOnTermination: 'true'
+      #     DeviceIndex: 0
+      #     SubnetId: !Ref 'PrivateSubnet1ID'
+      #     GroupSet:
+      #       - !Ref 'DomainMemberSGID'
+      #       - !Ref 'ADFSSecurityGroup'
+
+      # BlockDeviceMappings:
+      #   - DeviceName: /dev/sda1
+      #     Ebs:
+      #       VolumeSize: '100'
+      #       VolumeType: gp2
+      #   - DeviceName: /dev/xvdb
+      #     VirtualName: ephemeral0
+
+      UserData: !Base64
+        'Fn::Join': 
+          - ''
+          - - "<powershell>\n"
+            - "cfn-init.exe "
+            - " --stack "
+            - "Ref": "AWS::StackId"
+            - " --resource ADFSInstance"
+            - " --region "
+            - "Ref": "AWS::Region"
+            - " --configsets config"
+            - " -v \n"
+            - "</powershell>\n"
+    Type: AWS::EC2::Instance
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT120M
+Outputs:
+  StackName:
+    Description: StackName of this stack
+    Value: !Ref AWS::StackName
+  InstanceId:
+    Description: ADFS Server Instance ID
+    Value: !Ref ADFSInstance
+    Export: 
+      Name: !Sub "${AWS::StackName}-InstanceId"  
+  PrivateIp:
+    Description: Primary IP address of ADFS Instance 
+    Value: !GetAtt ADFSInstance.PrivateIp
+    Export:
+      Name: !Sub "${AWS::StackName}-PrivateIp"
