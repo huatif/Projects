@@ -57,8 +57,8 @@ stacks:
       # Hostname: ${hostname}v${app_version}
       # InstanceAMI: ${instance_ami}
       # InstanceKeyPair: ${ec2_keypair}
-     IAMRoleName: ${iam_role_name}
+      # # IAMRoleName: ${iam_role_name}
       # InstanceType: ${instance_type}
       # IAMS3BucketName: ${ops_bucket_name}
-     RootVolumeSize: ${RootVolumeSize}
+      # # RootVolumeSize: ${RootVolumeSize}
       # AppEnv: ${app_name}
