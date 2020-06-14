@@ -1,3 +1,13 @@
+
+
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Infra Role
+ 
+Parameters:
+  IAMRoleName:
+    Type: String
+    Description: Role Name
+    
 Resources:
   EC2InstanceProfile:
     Properties:
