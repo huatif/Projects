@@ -12,8 +12,7 @@ Parameters:
     Type: String
     Default: amehan-ent
   LatestAmiId:
-    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
-    Default: /aws/service/ami-windows-latest/Windows_Server-2016-English-Full-Base
+    Type: String
   InstanceKeyPair:
     Description: They Key Pair to use with the instance
     Type: AWS::EC2::KeyPair::KeyName
