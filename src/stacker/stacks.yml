@@ -43,7 +43,7 @@ stacks:
    
   app-layer-green:
     enabled: ${app_green_enabled}
-    stack_name: app-v${app_green_ver}
+    stack_name: adfs-v${app_green_ver}
     template_path: templates/adfs.yaml
     variables:
       InfraStackName: ${output infra::StackName}
@@ -57,7 +57,7 @@ stacks:
 
   app-layer-blue:
     enabled: ${app_blue_enabled}
-    stack_name: app-v${app_blue_ver}
+    stack_name: adfs-v${app_blue_ver}
     template_path: templates/adfa.yaml
     variables:
       InfraStackName: ${output infra::StackName}
