@@ -10,7 +10,7 @@ sys_path: ./
 stacks:
   AD-Server:
     enabled: ${adserver_enabled}
-    stack_name: app-v-${os_version}
+    stack_name: adserver-v${os_version}
     template_path: templates/ADServer.yaml
     variables:
       # InfraStackName: ${output infra::StackName}
@@ -18,7 +18,7 @@ stacks:
       KeyName: ${ec2_keypair}
       InstanceType: ${instance_type}
       DomainDNSName: ${domain_dnsname}
-      DomainNetBIOS: ${NetBIOS_name}
+      DomainNetBIOSName: ${NetBIOS_name}
       RestoreModePassword: ${domain_secret}
       SourceCidrForRDP: ${cidr_block}
       IAMS3BucketName: ${ops_bucket_name}
