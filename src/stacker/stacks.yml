@@ -8,12 +8,28 @@ sys_path: ./
  
  
 stacks:
+  AD-Server:
+    enabled: ${app_blue_enabled}
+    stack_name: app-v${env_name}
+    template_path: templates/ADServer.yaml
+    variables:
+      # InfraStackName: ${output infra::StackName}
+      Hostname: ${hostname}v${os_version}
+      KeyName: ${ec2_keypair}
+      InstanceType: ${instance_type}
+      DomainDNSName: ${domain_dnsname}
+      DomainNetBIOS: ${NetBIOS_name}
+      RestoreModePassword: ${domain_secret}
+      SourceCidrForRDP: ${cidr_block}
+      IAMS3BucketName: ${ops_bucket_name}
+      AppEnv: ${aws_account}
+      
   infra:
     stack_name: ec2-infra
     template_path: templates/infra.yaml
     variables:
       IAMRoleName: ${iam_role_name}
-
+   
   app-layer-green:
     enabled: ${app_green_enabled}
     stack_name: app-v${app_green_ver}
@@ -41,6 +57,9 @@ stacks:
       IAMS3BucketName: ${ops_bucket_name}
       AppEnv: ${aws_account}
       ADFSVersion: ${adfs_version_blue}
+      
+
+
 
 
 
