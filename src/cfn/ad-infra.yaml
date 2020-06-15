@@ -87,6 +87,8 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Domain Controller
+      VpcId:
+        !FindInMap [RegionMap, !Ref "AWS::Region", DefaultVPC]
       SecurityGroupIngress:
       - IpProtocol: udp
         FromPort: '123'

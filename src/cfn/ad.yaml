@@ -12,6 +12,7 @@ Parameters:
     Type: String
     Default: amehan-ent
   LatestAmiId:
+    Description: Instance AMI
     Type: String
   InstanceKeyPair:
     Description: They Key Pair to use with the instance
