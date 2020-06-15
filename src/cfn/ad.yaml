@@ -238,7 +238,7 @@ Resources:
         Ebs:
           VolumeSize: 40
           VolumeType: gp2
-      ImageId: !Ref 'InstanceAMI'
+      ImageId: !Ref LatestAmiId
       SecurityGroupIds:
       - Fn::ImportValue:
          !Sub "${ADInfraStackName}-DomainControllerSecurityGroup"
