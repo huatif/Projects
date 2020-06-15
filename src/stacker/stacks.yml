@@ -13,22 +13,33 @@ stacks:
     stack_name: adserver-v${os_version}
     template_path: templates/ADServer.yaml
     variables:
-      # InfraStackName: ${output infra::StackName}
+      ADInfraStackName: ${output ad-infra::StackName}
       Hostname: ${hostname}v${os_version}
-      KeyName: ${ec2_keypair}
+      InstanceKeyPair: ${ec2_keypair}
       InstanceType: ${instance_type}
       DomainDNSName: ${domain_dnsname}
       DomainNetBIOSName: ${NetBIOS_name}
       RestoreModePassword: ${domain_secret}
+      DomainAdminUser: ${domain_username}
       SourceCidrForRDP: ${cidr_block}
       IAMS3BucketName: ${ops_bucket_name}
       AppEnv: ${aws_account}
+      InstanceAMI: {instance_ami}
+      S3KeyPrefix: ${s3_key}
+      
       
   infra:
     stack_name: ec2-infra
     template_path: templates/infra.yaml
     variables:
       IAMRoleName: ${iam_role_name}
+
+  ad-infra:
+    stack_name: ad-infra
+    template_path: templates/ad-infra.yaml
+    variables:
+      ADServerRole: ${adserver_role_name}
+      SourceCidrForRDP: ${cidr_block}
    
   app-layer-green:
     enabled: ${app_green_enabled}
