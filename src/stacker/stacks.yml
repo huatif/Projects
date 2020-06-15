@@ -9,8 +9,8 @@ sys_path: ./
  
 stacks:
   AD-Server:
-    enabled: ${app_blue_enabled}
-    stack_name: app-v${env_name}
+    enabled: ${adserver_enabled}
+    stack_name: app-v-${os_version}
     template_path: templates/ADServer.yaml
     variables:
       # InfraStackName: ${output infra::StackName}
