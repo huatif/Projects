@@ -24,7 +24,7 @@ stacks:
       SourceCidrForRDP: ${cidr_block}
       IAMS3BucketName: ${ops_bucket_name}
       AppEnv: ${aws_account}
-      LatestAmiId: {instance_ami}
+      LatestAmiId: ${instance_ami}
       S3KeyPrefix: ${s3_key}
       
       
