@@ -49,33 +49,6 @@ Parameters:
     Description: Build-Version corresponding to your product. Note - This is just
       a Default value, you get to override this later when you trigger automation
       workflow.
-  # cidrVPC:
-  #   Description: An available CIDR block for creating a new VPC. The size of the VPC
-  #     should be big enough to hold instances of all your golden AMIs at a time
-  #   Type: String
-  #   MinLength: '9'
-  #   MaxLength: '18'
-  #   Default: 10.0.0.0/16
-  #   AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
-  #   ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
-  # cidrPrivateSubnet:
-  #   Description: An available CIDR block for creating a new VPC. The size of the VPC
-  #     should be big enough to hold instances of all your golden AMIs at a time
-  #   Type: String
-  #   MinLength: '9'
-  #   MaxLength: '18'
-  #   Default: 10.0.1.0/24
-  #   AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
-  #   ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
-  # cidrPublicSubnet:
-  #   Description: An available CIDR block for creating a new VPC. The size of the VPC
-  #     should be big enough to hold instances of all your golden AMIs at a time
-  #   Type: String
-  #   MinLength: '9'
-  #   MaxLength: '18'
-  #   Default: 10.0.2.0/24
-  #   AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
-  #   ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
   ApproverUserIAMARN:
     Type: String
     Default: 'arn:aws:iam::165978834142:user/hatif'
