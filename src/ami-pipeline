@@ -51,7 +51,7 @@ Parameters:
       workflow.
   ApproverUserIAMARN:
     Type: String
-    Default: 'arn:aws:iam::165978834142:user/hatif'
+    Default: ''
     Description: IAM ARN of the Golden AMI approver. The approver must have AmazonSSMAutomationApproverAccess
       policy associated with it's IAM Profile .
   EmailID:
@@ -85,7 +85,7 @@ Parameters:
   subnetPrivate:
     Type: String
     Description: Private Subnet 
-    Default: subnet-231e5f4b
+    Default: 
 
 
 
@@ -123,93 +123,6 @@ Resources:
       Value:
         Ref: qualysOptionId
       Description: SSM Parameter for Qualys Option ID.
-  # VPC:
-  #   Type: AWS::EC2::VPC
-  #   Properties:
-  #     EnableDnsSupport: 'true'
-  #     EnableDnsHostnames: 'true'
-  #     CidrBlock:
-  #       Ref: cidrVPC
-  # subnetPrivate:
-  #   Type: AWS::EC2::Subnet
-  #   Properties:
-  #     CidrBlock:
-  #       Ref: cidrPrivateSubnet
-  #     VpcId:
-  #       Ref: VPC
-  # subnetPublic:
-  #   Type: AWS::EC2::Subnet
-  #   Properties:
-  #     MapPublicIpOnLaunch: true
-  #     CidrBlock:
-  #       Ref: cidrPublicSubnet
-  #     VpcId:
-  #       Ref: VPC
-  # InternetGateway:
-  #   Type: AWS::EC2::InternetGateway
-  # PublicVPCGatewayAttachment:
-  #   Type: AWS::EC2::VPCGatewayAttachment
-  #   Properties:
-  #     VpcId:
-  #       Ref: VPC
-  #     InternetGatewayId:
-  #       Ref: InternetGateway
-  # PublicRouteTable:
-  #   Type: AWS::EC2::RouteTable
-  #   Properties:
-  #     VpcId:
-  #       Ref: VPC
-  # PublicRoute:
-  #   Type: AWS::EC2::Route
-  #   DependsOn: PublicVPCGatewayAttachment
-  #   Properties:
-  #     RouteTableId:
-  #       Ref: PublicRouteTable
-  #     DestinationCidrBlock: 0.0.0.0/0
-  #     GatewayId:
-  #       Ref: InternetGateway
-  # PublicSubnetRouteTableAssociation:
-  #   Type: AWS::EC2::SubnetRouteTableAssociation
-  #   Properties:
-  #     SubnetId:
-  #       Ref: subnetPublic
-  #     RouteTableId:
-  #       Ref: PublicRouteTable
-  # NAT:
-  #   DependsOn: PublicVPCGatewayAttachment
-  #   Type: AWS::EC2::NatGateway
-  #   Properties:
-  #     AllocationId:
-  #       Fn::GetAtt:
-  #       - EIP
-  #       - AllocationId
-  #     SubnetId:
-  #       Ref: subnetPublic
-  # PrivateRouteTable:
-  #   Type: AWS::EC2::RouteTable
-  #   Properties:
-  #     VpcId:
-  #       Ref: VPC
-  # EIP:
-  #   Type: AWS::EC2::EIP
-  #   Properties:
-  #     Domain: vpc
-  # PrivateRoute:
-  #   Type: AWS::EC2::Route
-  #   DependsOn: PublicVPCGatewayAttachment
-  #   Properties:
-  #     RouteTableId:
-  #       Ref: PrivateRouteTable
-  #     DestinationCidrBlock: 0.0.0.0/0
-  #     NatGatewayId:
-  #       Ref: NAT
-  # PrivateSubnetRouteTableAssociation:
-  #   Type: AWS::EC2::SubnetRouteTableAssociation
-  #   Properties:
-  #     SubnetId:
-  #       Ref: subnetPrivate
-  #     RouteTableId:
-  #       Ref: PrivateRouteTable
   secGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
