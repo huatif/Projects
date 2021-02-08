@@ -114,32 +114,7 @@ Parameters:
     Description: Private Subnet 
     Default: subnet-231e5f4b
 
-Mappings: 
-  AccountMap: 
-    "202320969627":
-      NAME: amehan-account
-      VPC: vpc-c3274eab
-      SUBNET1: subnet-6ab22d02
-      SUBNET2: subnet-411bb33b
-      SGSSHCIIN: sg-06515a76f6440ea83
-      SGRDPCIIN: sg-06c989d78a4051e62
-      SGHTTPCIIN: sg-09fede2b789cbfdd1
-      SGHTTPSCIIN: sg-06b90ea57f9269897
-      BUCKETNAME: amehan-ent
-      HostedZoneID: Z3PJDB0Z20TSXH
-      WildcardCertificateARN: arn:aws:acm:ca-central-1:*certificate/95a8ad9b-53e7-44ac-9929-abe79aa1988e
- 
-    "165978834142":
-      NAME: ameerah-account
-      VPC: vpc-8edf8fe6
-      SUBNET1: subnet-231e5f4b
-      SUBNET2: subnet-cd3d2291
-      VCPDEV: vpc-0fc20b74561992129
-      DEVPRIVSUBNET1: subnet-0c0346e498702c1a8
-      DEVPRIVSUBNET2: subnet-072832abc7fc19131
-      DEVPUBLICSUBNET1: subnet-028a98abb930e8f02
-      DEVPUBLICSUBNET2: subnet-0c1edcd342f47629c
-      BUCKETNAME: baloch-test
+
 
 
 Resources:
